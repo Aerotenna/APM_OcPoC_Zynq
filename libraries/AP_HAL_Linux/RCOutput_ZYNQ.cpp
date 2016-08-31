@@ -28,7 +28,6 @@ using namespace Linux;
 #define PWM_CMD_CLR	         5	/* clr a pwm output explicitly */
 #define PWM_CMD_TEST	         6	/* various crap */
 
-
 static void catch_sigbus(int sig)
 {
     AP_HAL::panic("RCOutput.cpp:SIGBUS error gernerated\n");
