@@ -265,7 +265,10 @@
  #endif
 #else   // SITL, etc
  #ifndef COMPASS_OFFSETS_MAX
-  # define COMPASS_OFFSETS_MAX          500
+  // DAVE EDIT: increase max compass offset for OcPoC
+  # define COMPASS_OFFSETS_MAX          1000
+  // ORIGINAL: Max length of Compass Offsets 
+  //# define COMPASS_OFFSETS_MAX          500
  #endif
 #endif
 
