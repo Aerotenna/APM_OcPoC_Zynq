@@ -192,11 +192,12 @@ float Copter::get_pilot_desired_climb_rate(float throttle_control)
     float deadband_bottom = mid_stick - g.throttle_deadzone;
     // DAVE EDIT: Additional Variables for Piece-wise Linear Throttle Mapping
 #if 1
+    float thr_min = g.k_param_throttle_min;
     float mid_thr_pct = 0.8f;
 	float mid_vz_cmd_pct = 0.2f;
 	float mid_vz_cmd = mid_vz_cmd_pct * g.pilot_velocity_z_max;
 	float mid_thr_cmd_top = mid_thr_pct * (1000.0f - deadband_top) + deadband_top;
-	float mid_thr_cmd_bot = deadband_bottom - mid_thr_pct * (deadband_bottom - g.throttle_min);
+	float mid_thr_cmd_bot = deadband_bottom - mid_thr_pct * (deadband_bottom - thr_min);
 #endif
 
     // ensure a reasonable throttle value
@@ -215,7 +216,7 @@ float Copter::get_pilot_desired_climb_rate(float throttle_control)
 			desired_rate = mid_vz_cmd * (throttle_control-deadband_bottom) / (deadband_bottom-mid_thr_cmd_bot);
 		}else{
 			// from mid-point to min throttle
-			desired_rate = ((g.pilot_velocity_z_max-mid_vz_cmd) * (throttle_control-mid_thr_cmd_bot) / (mid_thr_cmd_bot-g.throttle_min)) - mid_vz_cmd;
+			desired_rate = ((g.pilot_velocity_z_max-mid_vz_cmd) * (throttle_control-mid_thr_cmd_bot) / (mid_thr_cmd_bot-thr_min)) - mid_vz_cmd;
 		}
     }
 	
@@ -241,7 +242,7 @@ float Copter::get_pilot_desired_climb_rate(float throttle_control)
     // Calculate the desired climb rate
 	if (throttle_control < deadband_bottom) {
         // below the deadband
-        desired_rate = g.pilot_velocity_z_max * pow( ((throttle_control-deadband_bottom) / (deadband_bottom-g.throttle_min)), 3.0);
+        desired_rate = g.pilot_velocity_z_max * pow( ((throttle_control-deadband_bottom) / (deadband_bottom-thr_min)), 3.0);
     }else if (throttle_control > deadband_top) {
         // above the deadband
         desired_rate = g.pilot_velocity_z_max * pow( ((throttle_control-deadband_top) / (1000.0f-deadband_top)), 3.0);
