@@ -1,3 +1,5 @@
+#include "RCInput_ZYNQ.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -13,7 +15,10 @@
 #include <AP_HAL/AP_HAL.h>
 
 #include "GPIO.h"
-#include "RCInput.h"
+
+#define RCIN_ZYNQ_PULSE_INPUT_BASE  0xFF200000
+
+#define CUSTOM_PWM_0_BASE1 0x00050000
 
 extern const AP_HAL::HAL& hal;
 
