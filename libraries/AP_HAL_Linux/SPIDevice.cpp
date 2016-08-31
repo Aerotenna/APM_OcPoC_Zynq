@@ -290,6 +290,15 @@ bool SPIDevice::transfer(const uint8_t * send, uint32_t send_len,
     msgs[0].bits_per_word = _desc.bits_per_word;
     msgs[0].cs_change = 0;
 
+
+    msgs[0].tx_buf = (uint64_t) send_t;
+    msgs[0].rx_buf = (uint64_t) recv_t;
+    msgs[0].len = len_t;
+    msgs[0].speed_hz = _speed;
+    msgs[0].delay_usecs = 0;
+    msgs[0].bits_per_word = _desc.bits_per_word;
+    msgs[0].cs_change = 0;
+
     int r;
     if (_bus.last_mode == _desc.mode) {
         /*
