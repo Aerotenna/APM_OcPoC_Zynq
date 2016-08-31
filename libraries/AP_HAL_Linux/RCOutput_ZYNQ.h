@@ -1,13 +1,18 @@
 #pragma once
 
-#include <AP_HAL/AP_HAL.h>
-
-namespace Linux {
-
+#include "AP_HAL_Linux.h"
+#define RCOUT_ZYNQ_PWM_BASE	 0xFF200000	//FIXME hardcoding is the devil's work
 #define MAX_ZYNQ_PWMS            8	/* number of pwm channels */
+#define PWM_CMD_CONFIG	         0	/* full configuration in one go */
+#define PWM_CMD_ENABLE	         1	/* enable a pwm */
+#define PWM_CMD_DISABLE	         2	/* disable a pwm */
+#define PWM_CMD_MODIFY	         3	/* modify a pwm */
+#define PWM_CMD_SET	         4	/* set a pwm output explicitly */
+#define PWM_CMD_CLR	         5	/* clr a pwm output explicitly */
+#define PWM_CMD_TEST	         6	/* various crap */
 
-class RCOutput_ZYNQ : public AP_HAL::RCOutput {
-public:
+
+class Linux::RCOutput_ZYNQ : public AP_HAL::RCOutput {
     void     init();
     void     set_freq(uint32_t chmask, uint16_t freq_hz);
     uint16_t get_freq(uint8_t ch);
@@ -20,8 +25,8 @@ public:
     void     push(void) override;
 
 private:
-    static const int TICK_PER_US=100;
-    static const int TICK_PER_S=100000000;
+    static const int TICK_PER_US=50;
+    static const int TICK_PER_S=50000000;
 
     // Period|Hi 32 bits each
     struct s_period_hi {
@@ -37,5 +42,3 @@ private:
     bool corked;
     uint32_t pending_mask;
 };
-
-}
