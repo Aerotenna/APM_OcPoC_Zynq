@@ -34,6 +34,7 @@
 #include "RCInput_ZYNQ.h"
 #include "RCOutput_AeroIO.h"
 #include "RCInput_ZYNQ.h"
+#include "RCOutput_AeroIO.h"
 #include "RCOutput_AioPRU.h"
 #include "RCOutput_Bebop.h"
 #include "RCOutput_Disco.h"
