@@ -31,8 +31,8 @@
 #include "RCInput_UDP.h"
 #include "RCInput_115200.h"
 #include "RCInput_Multi.h"
-#include "RCOutput_AeroIO.h"
 #include "RCInput_ZYNQ.h"
+#include "RCOutput_AeroIO.h"
 #include "RCOutput_AioPRU.h"
 #include "RCOutput_Bebop.h"
 #include "RCOutput_Disco.h"
@@ -70,7 +70,7 @@ static UARTDriver uartADriver(true);
 #if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_NAVIO || \
     CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_NAVIO2 || \
     CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_BH     || \
-	CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_ALTERA
+    CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_ALTERA
 static SPIUARTDriver uartBDriver;
 #else
 static UARTDriver uartBDriver(false);
