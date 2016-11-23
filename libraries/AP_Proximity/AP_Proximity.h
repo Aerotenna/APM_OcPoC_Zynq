@@ -35,9 +35,10 @@ public:
 
     // Proximity driver types
     enum Proximity_Type {
-        Proximity_Type_None  = 0,
-        Proximity_Type_SF40C = 1,
-        Proximity_Type_SITL  = 10,
+        Proximity_Type_None   = 0,
+        Proximity_Type_SF40C  = 1,
+        Proximity_Type_USHARP = 2,
+        Proximity_Type_SITL   = 10,
     };
 
     enum Proximity_Status {
