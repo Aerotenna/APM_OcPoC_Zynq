@@ -17,6 +17,9 @@
 #define AC_AVOID_USE_PROXIMITY_SENSOR   2       // stop based on proximity sensor output
 #define AC_AVOID_ALL                    3       // use fence and promiximity sensor
 
+// parameter defaults
+#define AVOID_DIST_DEFAULT  250.0f // default avoidance standoff distance
+
 /*
  * This class prevents the vehicle from leaving a polygon fence in
  * 2 dimensions by limiting velocity (adjust_velocity).
@@ -91,5 +94,6 @@ private:
     const AP_Proximity& _proximity;
 
     // parameters
-    AP_Int8 _enabled;
+    AP_Int8  _enabled;
+    AP_Float _avoid_dist;
 };
