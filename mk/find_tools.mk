@@ -63,6 +63,15 @@ ZYNQ_LD      :=  arm-xilinx-linux-gnueabi-g++
 ZYNQ_GDB     :=  arm-xilinx-linux-gnueabi-gdb
 ZYNQ_OBJCOPY :=  arm-xilinx-linux-gnueabi-objcopy
 
+# toolchains for ocpoc_zynq
+OCPOC_ZYNQ_CXX     :=  arm-linux-gnueabi-g++
+OCPOC_ZYNQ_CC      :=  arm-linux-gnueabi-gcc
+OCPOC_ZYNQ_AS      :=  arm-linux-gnueabi-gcc
+OCPOC_ZYNQ_AR      :=  arm-linux-gnueabi-ar
+OCPOC_ZYNQ_LD      :=  arm-linux-gnueabi-g++
+OCPOC_ZYNQ_GDB     :=  arm-linux-gnueabi-gdb
+OCPOC_ZYNQ_OBJCOPY :=  arm-linux-gnueabi-objcopy
+
 # enable ccache if installed
 CCACHE :=  $(call FIND_TOOL,ccache)
 export CCACHE
