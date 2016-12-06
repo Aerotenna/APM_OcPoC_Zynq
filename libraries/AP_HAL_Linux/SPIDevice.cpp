@@ -107,6 +107,13 @@ SPIDesc SPIDeviceManager::_device[] = {
     SPIDesc("lsm9ds0_g",  0, 0, SPI_MODE_3, 8, RPI_GPIO_12,  10*MHZ, 10*MHZ),
     SPIDesc("raspio",     0, 0, SPI_MODE_3, 8, RPI_GPIO_7,   10*MHZ, 10*MHZ),
 };
+#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+SPIDesc SPIDeviceManager::_device[] = {
+    /* MPU9250 is restricted to 1MHz for non-data and interrupt registers */
+    SPIDesc("mpu9250",    32766, 1,  SPI_MODE_3, 8, SPI_CS_KERNEL,  1*MHZ, 1*MHZ),
+    SPIDesc("ms5611",     32766, 0,  SPI_MODE_3, 8, SPI_CS_KERNEL,  1*MHZ, 1*MHZ),
+    SPIDesc("ublox",      32766, 2,  SPI_MODE_0, 8, SPI_CS_KERNEL,  5*MHZ, 5*MHZ),
+};
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_BH
 SPIDesc SPIDeviceManager::_device[] = {
     SPIDesc("mpu9250", 0, 0, SPI_MODE_0, 8, RPI_GPIO_7, 1*MHZ,   11*MHZ),
