@@ -15,7 +15,11 @@
 
 #include "AP_Proximity.h"
 #include "AP_Proximity_LightWareSF40C.h"
+<<<<<<< 3145b5c93ba74f10b536ee379e9d5c9f38efa843
 #include "AP_Proximity_MAV.h"
+=======
+#include "AP_Proximity_uSharp.h"
+>>>>>>> AP_Proximity: add support for Aerotenna uSharp proximity sensor
 #include "AP_Proximity_SITL.h"
 
 extern const AP_HAL::HAL &hal;
@@ -27,7 +31,7 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     // @Param: _TYPE
     // @DisplayName: Proximity type
     // @Description: What type of proximity sensor is connected
-    // @Values: 0:None,1:LightWareSF40C,2:MAVLink
+    // @Values: 0:None,1:LightWareSF40C,2:MAVLink,20:Aerotenna_uSharp
     // @User: Standard
     AP_GROUPINFO("_TYPE",   1, AP_Proximity, _type[0], 0),
 
@@ -133,7 +137,11 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     // @Param: 2_TYPE
     // @DisplayName: Second Proximity type
     // @Description: What type of proximity sensor is connected
+<<<<<<< 3145b5c93ba74f10b536ee379e9d5c9f38efa843
     // @Values: 0:None,1:LightWareSF40C,2:MAVLink
+=======
+    // @Values: 0:None,1:LightWareSF40C,2:Aerotenna_uSharp
+>>>>>>> AP_Proximity: add support for Aerotenna uSharp proximity sensor
     // @User: Advanced
     AP_GROUPINFO("2_TYPE", 16, AP_Proximity, _type[1], 0),
 
@@ -263,10 +271,20 @@ void AP_Proximity::detect_instance(uint8_t instance)
             return;
         }
     }
+
     if (type == Proximity_Type_MAV) {
         state[instance].instance = instance;
         drivers[instance] = new AP_Proximity_MAV(*this, state[instance]);
         return;
+    }
+
+    if (type == Proximity_Type_USHARP) {
+        if (AP_Proximity_uSharp::detect(serial_manager)) {
+            state[instance].instance = instance;
+            drivers[instance] = new AP_Proximity_uSharp(*this, state[instance], serial_manager);
+            return;
+        }
+
     }
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     if (type == Proximity_Type_SITL) {
