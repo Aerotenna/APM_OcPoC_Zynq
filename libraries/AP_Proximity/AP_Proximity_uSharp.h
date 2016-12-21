@@ -31,15 +31,6 @@ private:
     bool get_reading(void);
 
     AP_HAL::UARTDriver *uart = nullptr;
-    uint32_t _last_distance_received_ms;    // system time of last distance measurement received from sensor
     uint8_t linebuf[10];
     uint8_t linebuf_len;
-
-    // sensor data
-    uint8_t  _num_sectors = PROXIMITY_USHARP_PANELS;      // number of sectors we will search
-    uint16_t _sector_middle_deg[PROXIMITY_USHARP_PANELS]; // middle angle of each sector
-    uint8_t  _sector_width_deg[PROXIMITY_USHARP_PANELS];  // width (in degrees) of each sector
-    float    _angle[PROXIMITY_USHARP_PANELS];             // angle to closest object within each sector
-    float    _distance[PROXIMITY_USHARP_PANELS];          // distance to closest object within each sector
-    bool     _distance_valid[PROXIMITY_USHARP_PANELS];    // true if a valid distance received for each sector
 };

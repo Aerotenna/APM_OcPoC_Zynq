@@ -95,8 +95,6 @@ protected:
     uint8_t _num_sectors = PROXIMITY_USHARP_PANELS;
     uint16_t _sector_middle_deg[PROXIMITY_USHARP_PANELS];
     uint8_t _sector_width_deg[PROXIMITY_USHARP_PANELS];
-    for (uint8_t i=0; i<_num_sectors; i++) { _sector_middle_deg[i] = i * (360 / _num_sectors); }  // middle angle of each sector
-    for (uint8_t i=0; i<_num_sectors; i++) { _sector_width_deg[i] = (360 / _num_sectors); }       // width (in degrees) of each sector
 #else
     uint8_t _num_sectors = 8;
     uint16_t _sector_middle_deg[PROXIMITY_SECTORS_MAX] = {0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 0, 0};  // middle angle of each sector
