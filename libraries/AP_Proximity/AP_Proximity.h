@@ -40,6 +40,7 @@ public:
         Proximity_Type_SF40C = 1,
         Proximity_Type_MAV   = 2,
         Proximity_Type_SITL  = 10,
+        Proximity_Type_USHARP = 20,
     };
 
     enum Proximity_Status {
