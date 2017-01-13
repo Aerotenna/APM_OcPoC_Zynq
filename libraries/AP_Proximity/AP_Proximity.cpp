@@ -153,6 +153,11 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     AP_GROUPINFO("2_YAW_CORR", 18, AP_Proximity, _yaw_correction[1], PROXIMITY_YAW_CORRECTION_DEFAULT),
 #endif
 
+    // @Param: _SNR_TH
+    // @DisplayName: Signal-to-Noise Ratio Threshold
+    // @Description: Signal-to-Noise Ratio Threshold
+    // @Range: 0 100
+    // @User: Standard
     AP_GROUPINFO("_SNR_TH", 19, AP_Proximity, _snr_th, 50.0f),
 
     AP_GROUPEND
@@ -198,6 +203,11 @@ void AP_Proximity::update(void)
                 continue;
             }
             drivers[i]->update();
+
+            if (_type[i] == Proximity_Type_USHARP) {
+                // if using uSharp, pass through the _snr_th param
+                drivers[i]->set_snr_th(_snr_th);
+            }
         }
     }
 

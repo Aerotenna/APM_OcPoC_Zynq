@@ -65,6 +65,11 @@ public:
     // get distances in 8 directions. used for sending distances to ground station
     bool get_distances(AP_Proximity::Proximity_Distance_Array &prx_dist_array) const;
 
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+    // allow setting of _snr_threshold parameter
+    void set_snr_th(float snr_th_param) { _snr_threshold = snr_th_param; }
+#endif
+
 protected:
 
     // set status and update valid_count
@@ -95,6 +100,7 @@ protected:
     uint8_t _num_sectors = PROXIMITY_USHARP_PANELS;
     uint16_t _sector_middle_deg[PROXIMITY_USHARP_PANELS];
     uint8_t _sector_width_deg[PROXIMITY_USHARP_PANELS];
+    float _snr_threshold;
 #else
     uint8_t _num_sectors = 8;
     uint16_t _sector_middle_deg[PROXIMITY_SECTORS_MAX] = {0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 0, 0};  // middle angle of each sector
