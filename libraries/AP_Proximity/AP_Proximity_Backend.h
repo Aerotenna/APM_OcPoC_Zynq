@@ -22,6 +22,10 @@
 #define PROXIMITY_BOUNDARY_DIST_MIN 0.6f    // minimum distance for a boundary point.  This ensures the object avoidance code doesn't think we are outside the boundary.
 #define PROXIMITY_BOUNDARY_DIST_DEFAULT 100 // if we have no data for a sector, boundary is placed 100m out
 
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+  #define PROXIMITY_USHARP_PANELS            8                                 // maximum number of sectors
+#endif
+
 class AP_Proximity_Backend
 {
 public:
@@ -87,9 +91,15 @@ protected:
     AP_Proximity::Proximity_State &state;   // reference to this instances state
 
     // sectors
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+    uint8_t _num_sectors = PROXIMITY_USHARP_PANELS;
+    uint16_t _sector_middle_deg[PROXIMITY_USHARP_PANELS];
+    uint8_t _sector_width_deg[PROXIMITY_USHARP_PANELS];
+#else
     uint8_t _num_sectors = 8;
     uint16_t _sector_middle_deg[PROXIMITY_SECTORS_MAX] = {0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 0, 0};  // middle angle of each sector
     uint8_t _sector_width_deg[PROXIMITY_SECTORS_MAX] = {45, 45, 45, 45, 45, 45, 45, 45, 0, 0, 0, 0};        // width (in degrees) of each sector
+#endif
 
     // sensor data
     float _angle[PROXIMITY_SECTORS_MAX];            // angle to closest object within each sector
