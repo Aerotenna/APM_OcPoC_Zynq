@@ -15,11 +15,8 @@
 
 #include "AP_Proximity.h"
 #include "AP_Proximity_LightWareSF40C.h"
-<<<<<<< 3145b5c93ba74f10b536ee379e9d5c9f38efa843
 #include "AP_Proximity_MAV.h"
-=======
 #include "AP_Proximity_uSharp.h"
->>>>>>> AP_Proximity: add support for Aerotenna uSharp proximity sensor
 #include "AP_Proximity_SITL.h"
 
 extern const AP_HAL::HAL &hal;
