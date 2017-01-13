@@ -153,6 +153,8 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     AP_GROUPINFO("2_YAW_CORR", 18, AP_Proximity, _yaw_correction[1], PROXIMITY_YAW_CORRECTION_DEFAULT),
 #endif
 
+    AP_GROUPINFO("_SNR_TH", 19, AP_Proximity, _snr_th, 50.0f),
+
     AP_GROUPEND
 };
 

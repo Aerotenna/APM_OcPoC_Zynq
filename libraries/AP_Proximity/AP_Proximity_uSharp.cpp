@@ -82,56 +82,103 @@ float AP_Proximity_uSharp::distance_min() const
 bool AP_Proximity_uSharp::get_reading(void)
 {
     // read any available lines from the uLanding
-    float sum[4] = {0,};
-    uint16_t count[4] = {0,};
-    uint8_t  index = 0;
+	float sum[8] = {0,};
+	float snr[8] = {0,};
+	uint16_t count[8] = {0,};
+	uint8_t  index = 0;
     uint8_t  panel_index;
 
     int16_t nbytes = uart->available();
     while (nbytes-- > 0) {
         uint8_t c = uart->read();
         // ok, we have located start byte
-        if ( c == 72 && index ==0 ) {
+        if ( c == 254 && index ==0 ) {
             linebuf_len = 0;
             index       = 1;
         }
         // now it is ready to decode index information
         if ( index == 1 ){
-            linebuf[linebuf_len] = c;
-            linebuf_len ++;
-            if ( linebuf_len == 4 ){
-                index = 0;
-
-                switch (linebuf[1]) {
-                case 252:
-                    panel_index = 3;
-                    break;
-                case 253:
-                    panel_index = 0;
-                    break;
-                case 254:
-                    panel_index = 1;
-                    break;
-                default:
-                    panel_index = 2;
-                }
-
-                sum[panel_index] += (linebuf[3] & 0x7F)*128 + (linebuf[2] & 0x7F);
-                count[panel_index]++;
-
-                linebuf_len = 0;
-            }
+        	linebuf[linebuf_len] = c;
+        	linebuf_len ++;
+        	if ( linebuf_len == 7 ){
+        		index = 0;
+        		int expo = 0;
+        		float fsnr = 0.0f;
+        		float db   = 0.0f;
+        		// Checksum
+        		// ( VersionID + Direction + Altitude Low + Altitude High + SNR ) & 0xFF == checksum
+        		if ( ( ( linebuf[1]+linebuf[2]+linebuf[3] +linebuf[4]+linebuf[5] )&0xFF )==linebuf[6] ){
+        			//convert snr from 1 byte "floating point" to db
+    				expo = 32 - int(linebuf[5]&0x1F);
+        			if ( linebuf[5] >=  224 ){
+        				fsnr = 1.75f*pow(2,expo);
+        			}
+        			else if(linebuf[5] >= 192){
+        				fsnr = 1.5f*pow(2,expo);
+        			}
+        			else if(linebuf[5] >= 160){
+        				fsnr = 1.25f*pow(2,expo);
+        			}
+        			else {
+        				fsnr = 1.0f*pow(2,expo);
+        			}
+    				db   = 10*log10(fsnr);
+            		switch(linebuf[2]){
+            		case 0:
+            			sum[7] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[7] += db;
+            			count[7]++;
+            			break;
+            		case 1:
+            			sum[0] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[0] += db;
+            			count[0]++;
+            			break;
+            		case 2:
+            			sum[1] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[1] += db;
+            			count[1]++;
+            			break;
+            		case 3:
+            			sum[2] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[2] += db;
+            			count[2]++;
+            			break;
+            		case 4:
+            			sum[3] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[3] += db;
+            			count[3]++;
+            			break;
+            		case 5:
+            			sum[4] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[4] += db;
+            			count[4]++;
+            			break;
+            		case 6:
+            			sum[5] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[5] += db;
+            			count[5]++;
+            			break;
+            		default:
+            			sum[6] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
+            			snr[6] += db;
+            			count[6]++;
+            		}
+        		}
+        		// we have decoded all the bytes in the buffer
+        		linebuf_len = 0;
+        	}
         }
-
     }
-
-    if ( count[0] == 0 && count[1] == 0 && count[2] == 0 && count[3] == 0 ) {
-        // return false (i.e. set status = Proximity_NoData) if no panels return data
+    // If we did not receive any information from any channel, then return
+    if ( count[0] == 0 && count[1] == 0 && count[2] == 0 && count[3] == 0
+    		&& count[4] == 0 && count[5] == 0 && count[6] == 0 && count[7] == 0) {
         return false;
     }
 
     for (uint8_t i=0; i<_num_sectors; i++) {
-        if ( count[i] != 0 ){
+    	float snr_average = snr[i]/count[i];
+    		if ( snr_average >_frontend._snr_th ){
             _distance[i] = (USHARP_MEASUREMENT_COEFFICIENT * sum[i] / count[i]) / 100.0f;
             _distance_valid[i] = true;
         }else{
