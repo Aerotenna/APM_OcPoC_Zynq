@@ -63,7 +63,7 @@
 #define AP_SERIALMANAGER_SToRM32_BUFSIZE_RX     128
 #define AP_SERIALMANAGER_SToRM32_BUFSIZE_TX     128
 
-// Aerotenne uLanding Altimeter
+// Aerotenna uLanding Altimeter
 // Note that size of UART FIFO is 128 for Altera-OcPoc board
 #define AP_SERIALMANAGER_ULANDING_BAUD           115200
 #define AP_SERIALMANAGER_ULANDING_BUFSIZE_RX     128
@@ -89,7 +89,8 @@ public:
         SerialProtocol_FrSky_SPort_Passthrough = 10, // FrSky SPort Passthrough (OpenTX) protocol (X-receivers)
         SerialProtocol_Lidar360 = 11,                // Lightware SF40C or TeraRanger Tower
         SerialProtocol_Aerotenna_uLanding      = 12, // Ulanding support
-        SerialProtocol_Beacon = 13
+        SerialProtocol_Beacon = 13,
+        SerialProtocol_Aerotenna_uSharp        = 14, // Aerotenna uSharp support
     };
 
     // Constructor
