@@ -124,6 +124,7 @@ private:
     AP_Int16 _yaw_correction[PROXIMITY_MAX_INSTANCES];
     AP_Int16 _ignore_angle_deg[PROXIMITY_MAX_IGNORE];   // angle (in degrees) of area that should be ignored by sensor (i.e. leg shows up)
     AP_Int8 _ignore_width_deg[PROXIMITY_MAX_IGNORE];    // width of beam (in degrees) that should be ignored
+    AP_Float _snr_th;
 
     void detect_instance(uint8_t instance);
     void update_instance(uint8_t instance);  
