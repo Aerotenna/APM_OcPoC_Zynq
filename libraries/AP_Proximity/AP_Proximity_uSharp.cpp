@@ -86,7 +86,6 @@ bool AP_Proximity_uSharp::get_reading(void)
     float snr[8] = {0,};
     uint16_t count[8] = {0,};
     uint8_t  index = 0;
-    uint8_t  panel_index;
 
     int16_t nbytes = uart->available();
     while (nbytes-- > 0) {
@@ -122,7 +121,7 @@ bool AP_Proximity_uSharp::get_reading(void)
 
                     db   = 10*log10(fsnr);
 
-                    uint8_t i = linebuf[2] - 1;
+                    int i = linebuf[2] - 1;
                     if (i<0) {
                         i = 7;
                     }
@@ -130,6 +129,7 @@ bool AP_Proximity_uSharp::get_reading(void)
                     sum[i] += ( linebuf[4]&0x7F ) *128 + ( linebuf[3]&0x7F );
                     snr[i] += db;
                     count[i]++;
+                }
 
                 // we have decoded all the bytes in the buffer
                 linebuf_len = 0;
@@ -144,7 +144,7 @@ bool AP_Proximity_uSharp::get_reading(void)
 
     for (uint8_t i=0; i<_num_sectors; i++) {
         float snr_average = snr[i]/count[i];
-        if (snr_average >_frontend._snr_th) {
+        if (snr_average > _snr_threshold) {
             _distance[i] = (USHARP_MEASUREMENT_COEFFICIENT * sum[i] / count[i]) / 100.0f;
             _distance_valid[i] = true;
         }else{
