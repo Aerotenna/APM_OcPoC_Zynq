@@ -4,7 +4,7 @@
 #include "AP_Proximity_Backend.h"
 
 #define PROXIMITY_USHARP_TIMEOUT_MS        200                               // requests timeout after 0.2 seconds
-#define USHARP_MEASUREMENT_COEFFICIENT     2.5f
+#define USHARP_MEASUREMENT_COEFFICIENT     20.0f
 #define PROXIMITY_USHARP_DISTANCE_MAX      50.0f
 #define PROXIMITY_USHARP_DISTANCE_MIN      0.31f
 
