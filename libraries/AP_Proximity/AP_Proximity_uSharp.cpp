@@ -36,7 +36,8 @@ AP_Proximity_uSharp::AP_Proximity_uSharp(AP_Proximity &_frontend,
         uart->begin(serial_manager.find_baudrate(AP_SerialManager::SerialProtocol_Aerotenna_uSharp, 0));
     }
 
-#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+#if 0
+//#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
     // initialize sector attributes
     for (uint8_t i=0; i<_num_sectors; i++) {
         _sector_middle_deg[i] = i * (360 / _num_sectors); // middle angle of each sector
@@ -145,10 +146,13 @@ bool AP_Proximity_uSharp::get_reading(void)
     for (uint8_t i=0; i<_num_sectors; i++) {
         float snr_average = snr[i]/count[i];
         if (snr_average > _snr_threshold) {
+            _angle[i] = _sector_middle_deg[i];
             _distance[i] = (USHARP_MEASUREMENT_COEFFICIENT * sum[i] / count[i]) / 100.0f;
             _distance_valid[i] = true;
         }else{
-            _distance_valid[i] = false;
+            _angle[i] = _sector_middle_deg[i];
+            _distance[i] = PROXIMITY_USHARP_DISTANCE_MAX;
+            _distance_valid[i] = true;
         }
     }
 
