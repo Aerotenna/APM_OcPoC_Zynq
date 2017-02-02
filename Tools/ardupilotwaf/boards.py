@@ -296,7 +296,7 @@ class zynq(linux):
         )
 
 class ocpoc_zynq(linux):
-    toolchain = 'arm-linux-gnueabi'
+    toolchain = 'arm-linux-gnueabihf'
 
     def configure_env(self, cfg, env):
         super(ocpoc_zynq, self).configure_env(cfg, env)
