@@ -112,7 +112,6 @@ SPIDesc SPIDeviceManager::_device[] = {
     /* MPU9250 is restricted to 1MHz for non-data and interrupt registers */
     SPIDesc("mpu9250",    1, 0,  SPI_MODE_3, 8, SPI_CS_KERNEL,  1*MHZ, 1*MHZ),
     SPIDesc("ms5611",     1, 1,  SPI_MODE_3, 8, SPI_CS_KERNEL,  1*MHZ, 1*MHZ),
-    SPIDesc("ublox",      1, 2,  SPI_MODE_0, 8, SPI_CS_KERNEL,  5*MHZ, 5*MHZ),
 };
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_BH
 SPIDesc SPIDeviceManager::_device[] = {
