@@ -219,6 +219,9 @@ const uint32_t AP_GPS::_baudrates[] = {4800U, 19200U, 38400U, 115200U, 57600U, 9
 // initialisation blobs to send to the GPS to try to get it into the
 // right mode
 const char AP_GPS::_initialisation_blob[] = UBLOX_SET_BINARY MTK_SET_BINARY SIRF_SET_BINARY;
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+const char AP_GPS::_initialisation_raw_blob[] = UBLOX_SET_BINARY_RAW_BAUD MTK_SET_BINARY SIRF_SET_BINARY;
+#endif
 
 /*
   send some more initialisation string bytes if there is room in the
@@ -347,6 +350,14 @@ AP_GPS::detect_instance(uint8_t instance)
         _port[instance]->begin(baudrate);
         _port[instance]->set_flow_control(AP_HAL::UARTDriver::FLOW_CONTROL_DISABLE);
         dstate->last_baud_change_ms = now;
+
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+  #if UBLOX_RXM_RAW_LOGGING
+        if(_raw_data != 0) {
+            send_blob_start(instance,_initialisation_raw_blob, sizeof(_initialisation_raw_blob));
+        } else
+  #endif
+#endif
 
         if (_auto_config == 1) {
             send_blob_start(instance, _initialisation_blob, sizeof(_initialisation_blob));
