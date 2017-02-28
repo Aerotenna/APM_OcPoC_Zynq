@@ -18,7 +18,11 @@
 #include <AP_RCMapper/AP_RCMapper.h>
 #include <AP_Common/Bitmask.h>
 
+#if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+#define NUM_SERVO_CHANNELS 14
+#else
 #define NUM_SERVO_CHANNELS 16
+#endif
 
 class SRV_Channels;
 
