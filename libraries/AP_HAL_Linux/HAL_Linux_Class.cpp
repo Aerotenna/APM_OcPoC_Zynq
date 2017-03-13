@@ -31,6 +31,7 @@
 #include "RCInput_UDP.h"
 #include "RCInput_115200.h"
 #include "RCInput_Multi.h"
+#include "RCInput_ZYNQ.h"
 #include "RCOutput_AeroIO.h"
 #include "RCOutput_AioPRU.h"
 #include "RCOutput_Bebop.h"
@@ -154,6 +155,12 @@ static RCInput_RPI rcinDriver;
 static RCInput_Raspilot rcinDriver;
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_ZYNQ
 static RCInput_ZYNQ rcinDriver;
+#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+#if HAL_DEFAULT_RC_SBUS
+static RCInput_SBUS rcinDriver;
+#else
+static RCInput_ZYNQ rcinDriver;
+#endif
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_BEBOP
 static RCInput_UDP  rcinDriver;
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_MINLURE
@@ -162,8 +169,7 @@ static RCInput_UART rcinDriver("/dev/ttyS2");
 static RCInput_DSM rcinDriver;
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_DISCO
 static RCInput_Multi rcinDriver{2, new RCInput_SBUS, new RCInput_115200("/dev/uart-sumd")};
-#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_AERO || \
-      CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
+#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_AERO 
 static RCInput_SBUS rcinDriver;
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_NAVIO2
 static RCInput_Navio2 rcinDriver;
