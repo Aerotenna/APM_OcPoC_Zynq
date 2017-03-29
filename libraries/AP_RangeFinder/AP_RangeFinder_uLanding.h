@@ -3,6 +3,8 @@
 #include "RangeFinder.h"
 #include "RangeFinder_Backend.h"
 
+#define ULANDING_VERSION 1
+
 class AP_RangeFinder_uLanding : public AP_RangeFinder_Backend
 {
 
