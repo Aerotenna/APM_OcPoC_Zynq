@@ -33,4 +33,7 @@ private:
     AP_HAL::UARTDriver *uart = nullptr;
     uint8_t linebuf[10];
     uint8_t linebuf_len;
+
+    // convert indices of uSharp panels to AC_Avoid appropriate indices
+    uint8_t _avoid_index_from_panel[PROXIMITY_USHARP_PANELS] = {0, 2, 4, 6, 1, 3, 5, 7};
 };

@@ -143,7 +143,10 @@ bool AP_Proximity_uSharp::get_reading(void)
         return false;
     }
 
-    for (uint8_t i=0; i<_num_sectors; i++) {
+    for (uint8_t k=0; k<_num_sectors; k++) {
+
+        uint8_t i = _avoid_index_from_panel[k];
+
         float snr_average = snr[i]/count[i];
         if (snr_average > _snr_threshold) {
             _angle[i] = _sector_middle_deg[i];
