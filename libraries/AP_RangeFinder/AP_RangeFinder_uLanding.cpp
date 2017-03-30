@@ -80,11 +80,11 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
 #if ULANDING_VERSION == 1
             if (linebuf_len == 6) {
             // we have received six bytes data 
-            // checksum
-                if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
+            // checksum -- temporarily disabled until checksum issue is investigated
+                //if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
                     sum += linebuf[3]*256 + linebuf[2];
                     count ++;
-                }
+                //}
                 index = 0;
                 linebuf_len = 0;
             }
