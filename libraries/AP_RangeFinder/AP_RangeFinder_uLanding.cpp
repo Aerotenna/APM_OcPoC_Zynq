@@ -81,10 +81,10 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
             if (linebuf_len == 6) {
             // we have received six bytes data 
             // checksum
-                if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
+                //if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
                     sum += linebuf[3]*256 + linebuf[2];
                     count ++;
-                }
+                //}
                 index = 0;
                 linebuf_len = 0;
             }
