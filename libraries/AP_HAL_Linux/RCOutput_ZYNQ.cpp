@@ -61,21 +61,11 @@ void RCOutput_ZYNQ::set_freq(uint32_t chmask, uint16_t freq_hz)            //LSB
 
 uint16_t RCOutput_ZYNQ::get_freq(uint8_t ch)
 {
-<<<<<<< 84563ae67d8f564f5a66866807b20eaa21865f70
     if (ch >= PWM_CHAN_COUNT) {
         return 0;
     }
 
     return TICK_PER_S/sharedMem_cmd->periodhi[ch].period;
-=======
-    uint16_t ret = 0;
-
-    if (ch < MAX_ZYNQ_PWMS) {
-        ret = TICK_PER_S/sharedMem_cmd->periodhi[ch].period;
-    }
-
-    return ret;
->>>>>>> AP_HAL_Linux: RCOutput_ZYNQ: check for valid channel
 }
 
 void RCOutput_ZYNQ::enable_ch(uint8_t ch)
