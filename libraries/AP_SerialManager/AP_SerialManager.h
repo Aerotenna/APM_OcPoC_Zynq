@@ -69,6 +69,12 @@
 #define AP_SERIALMANAGER_ULANDING_BUFSIZE_RX     128
 #define AP_SERIALMANAGER_ULANDING_BUFSIZE_TX     128
 
+// Aerotenna uSharp 77GHz
+// Note that size of UART FIFO is 256 for OcPoc-Zynq-Mini board
+#define AP_SERIALMANAGER_USHARP_77GHz_BAUD           115200
+#define AP_SERIALMANAGER_USHARP_77GHz_BUFSIZE_RX     512
+#define AP_SERIALMANAGER_USHARP_77GHz_BUFSIZE_TX     512
+
 
 class AP_SerialManager {
 

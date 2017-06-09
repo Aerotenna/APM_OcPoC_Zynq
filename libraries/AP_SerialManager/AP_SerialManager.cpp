@@ -208,10 +208,10 @@ void AP_SerialManager::init()
                     break;
                 case SerialProtocol_Aerotenna_uSharp:
                     // Note baudrate is hardcoded to 115200
-                    state[i].baud = AP_SERIALMANAGER_ULANDING_BAUD / 1000;   // update baud param in case user looks at it
+                    state[i].baud = AP_SERIALMANAGER_USHARP_77GHz_BAUD / 1000;   // update baud param in case user looks at it
                     state[i].uart->begin(map_baudrate(state[i].baud),
-                                         AP_SERIALMANAGER_ULANDING_BUFSIZE_RX,
-                                         AP_SERIALMANAGER_ULANDING_BUFSIZE_TX);
+                                         AP_SERIALMANAGER_USHARP_77GHz_BUFSIZE_RX,
+                                         AP_SERIALMANAGER_USHARP_77GHz_BUFSIZE_TX);
                     break;
             }
         }
