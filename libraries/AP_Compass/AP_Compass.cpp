@@ -624,8 +624,8 @@ void Compass::_detect_backends(void)
     ADD_BACKEND(AP_Compass_HMC5843::probe(*this, hal.i2c_mgr->get_device(HAL_COMPASS_HMC5843_I2C_BUS, HAL_COMPASS_HMC5843_I2C_ADDR), true),
                  AP_Compass_HMC5843::name, true);
 #elif HAL_COMPASS_DEFAULT == HAL_COMPASS_OCPOC_ZYNQ
-    ADD_BACKEND(AP_Compass_HMC5843::probe(*this, hal.i2c_mgr->get_device(HAL_COMPASS_HMC5843_I2C_BUS, HAL_COMPASS_HMC5843_I2C_ADDR)),
-                AP_Compass_HMC5843::name, true);
+/*    ADD_BACKEND(AP_Compass_HMC5843::probe(*this, hal.i2c_mgr->get_device(HAL_COMPASS_HMC5843_I2C_BUS, HAL_COMPASS_HMC5843_I2C_ADDR)),
+                AP_Compass_HMC5843::name, true);*/
     ADD_BACKEND(AP_Compass_AK8963::probe_mpu9250(*this, 0),
                  AP_Compass_AK8963::name, false);
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_PXF || \
