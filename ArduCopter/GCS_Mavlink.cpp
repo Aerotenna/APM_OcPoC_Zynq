@@ -211,13 +211,27 @@ void NOINLINE Copter::send_current_waypoint(mavlink_channel_t chan)
 void NOINLINE Copter::send_rangefinder(mavlink_channel_t chan)
 {
     // exit immediately if rangefinder is disabled
+    if (g2.proximity.get_status() == AP_Proximity::Proximity_NotConnected) {
+        return;
+    }
+    
+    AP_Proximity::Proximity_Distance_Array dist_array;
+    if (g2.proximity.get_distances(dist_array)) {
+        mavlink_msg_rangefinder_send(
+                chan,
+                dist_array.distance[0],
+                dist_array.orientation[0]);
+    }
+
+/*
+    // exit immediately if rangefinder is disabled
     if (!rangefinder.has_data()) {
         return;
     }
     mavlink_msg_rangefinder_send(
             chan,
             rangefinder.distance_cm() * 0.01f,
-            rangefinder.voltage_mv() * 0.001f);
+            rangefinder.voltage_mv() * 0.001f);*/
 }
 #endif
 
