@@ -41,6 +41,7 @@ public:
         Proximity_Type_MAV   = 2,
         Proximity_Type_SITL  = 10,
         Proximity_Type_USHARP = 20,
+        Proximity_Type_USHARP_77GHz = 22,
     };
 
     enum Proximity_Status {

@@ -17,6 +17,7 @@
 #include "AP_Proximity_LightWareSF40C.h"
 #include "AP_Proximity_MAV.h"
 #include "AP_Proximity_uSharp.h"
+#include "AP_Proximity_uSharp_77GHz.h"
 #include "AP_Proximity_SITL.h"
 
 extern const AP_HAL::HAL &hal;
@@ -289,6 +290,15 @@ void AP_Proximity::detect_instance(uint8_t instance)
         }
 
     }
+    
+    if (type == Proximity_Type_USHARP_77GHz) {
+        if (AP_Proximity_uSharp_77GHz::detect(serial_manager)) {
+            state[instance].instance = instance;
+            drivers[instance] = new AP_Proximity_uSharp_77GHz(*this, state[instance], serial_manager);
+            return;
+        }
+    }
+    
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     if (type == Proximity_Type_SITL) {
         state[instance].instance = instance;
