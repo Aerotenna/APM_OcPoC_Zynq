@@ -64,6 +64,9 @@ public:
     // get distances in 8 directions. used for sending distances to ground station
     bool get_horizontal_distances(AP_Proximity::Proximity_Distance_Array &prx_dist_array) const;
 
+    // allow setting of _snr_threshold parameter
+    void set_snr_th(float snr_th_param) { _snr_threshold = snr_th_param; }
+
 protected:
 
     // set status and update valid_count
@@ -93,6 +96,8 @@ protected:
     uint8_t _num_sectors = 8;
     uint16_t _sector_middle_deg[PROXIMITY_SECTORS_MAX] = {0, 45, 90, 135, 180, 225, 270, 315, 0, 0, 0, 0};  // middle angle of each sector
     uint8_t _sector_width_deg[PROXIMITY_SECTORS_MAX] = {45, 45, 45, 45, 45, 45, 45, 45, 0, 0, 0, 0};        // width (in degrees) of each sector
+
+    float _snr_threshold;
 
     // sensor data
     float _angle[PROXIMITY_SECTORS_MAX];            // angle to closest object within each sector

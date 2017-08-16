@@ -18,6 +18,7 @@
 #include "AP_Proximity_TeraRangerTower.h"
 #include "AP_Proximity_RangeFinder.h"
 #include "AP_Proximity_MAV.h"
+#include "AP_Proximity_uSharpPatch.h"
 #include "AP_Proximity_SITL.h"
 
 extern const AP_HAL::HAL &hal;
@@ -31,7 +32,7 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     // @Description: What type of proximity sensor is connected
     // @Values: 0:None,1:LightWareSF40C,2:MAVLink,3:TeraRangerTower,4:RangeFinder
     // @User: Standard
-    AP_GROUPINFO("_TYPE",   1, AP_Proximity, _type[0], 0),
+    AP_GROUPINFO("_TYPE",   1, AP_Proximity, _type[0], 20),
 
     // @Param: _ORIENT
     // @DisplayName: Proximity sensor orientation
@@ -168,6 +169,13 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     AP_GROUPINFO("2_YAW_CORR", 18, AP_Proximity, _yaw_correction[1], PROXIMITY_YAW_CORRECTION_DEFAULT),
 #endif
 
+    // @Param: _SNR_TH
+    // @DisplayName: Signal-to-Noise Ratio Threshold
+    // @Description: Signal-to-Noise Ratio Threshold
+    // @Range: 0 100
+    // @User: Standard
+    AP_GROUPINFO("_SNR_TH", 19, AP_Proximity, _snr_th, 45.0f),
+
     AP_GROUPEND
 };
 
@@ -211,6 +219,11 @@ void AP_Proximity::update(void)
                 continue;
             }
             drivers[i]->update();
+            
+            if (_type[i] == Proximity_Type_uSharpPatch) {
+                // if using uSharp-Patch, pass through the _snr_th param
+                drivers[i]->set_snr_th(_snr_th);
+            }
         }
     }
 
@@ -296,6 +309,12 @@ void AP_Proximity::detect_instance(uint8_t instance)
         drivers[instance] = new AP_Proximity_RangeFinder(*this, state[instance]);
         return;
     }
+    if (type == Proximity_Type_uSharpPatch) {
+        state[instance].instance = instance;
+        drivers[instance] = new AP_Proximity_uSharpPatch(*this, state[instance], serial_manager);
+        return;
+    }
+
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     if (type == Proximity_Type_SITL) {
         state[instance].instance = instance;
