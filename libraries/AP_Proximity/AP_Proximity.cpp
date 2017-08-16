@@ -18,6 +18,7 @@
 #include "AP_Proximity_TeraRangerTower.h"
 #include "AP_Proximity_RangeFinder.h"
 #include "AP_Proximity_MAV.h"
+#include "AP_Proximity_uSharpPatch.h"
 #include "AP_Proximity_SITL.h"
 
 extern const AP_HAL::HAL &hal;
@@ -31,7 +32,7 @@ const AP_Param::GroupInfo AP_Proximity::var_info[] = {
     // @Description: What type of proximity sensor is connected
     // @Values: 0:None,1:LightWareSF40C,2:MAVLink,3:TeraRangerTower,4:RangeFinder
     // @User: Standard
-    AP_GROUPINFO("_TYPE",   1, AP_Proximity, _type[0], 0),
+    AP_GROUPINFO("_TYPE",   1, AP_Proximity, _type[0], 20),
 
     // @Param: _ORIENT
     // @DisplayName: Proximity sensor orientation
@@ -296,6 +297,12 @@ void AP_Proximity::detect_instance(uint8_t instance)
         drivers[instance] = new AP_Proximity_RangeFinder(*this, state[instance]);
         return;
     }
+    if (type == Proximity_Type_uSharpPatch) {
+        state[instance].instance = instance;
+        drivers[instance] = new AP_Proximity_uSharpPatch(*this, state[instance], serial_manager);
+        return;
+    }
+
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     if (type == Proximity_Type_SITL) {
         state[instance].instance = instance;

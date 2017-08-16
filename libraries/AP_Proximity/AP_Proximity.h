@@ -42,6 +42,7 @@ public:
         Proximity_Type_TRTOWER = 3,
         Proximity_Type_RangeFinder = 4,
         Proximity_Type_SITL    = 10,
+        Proximity_Type_uSharpPatch = 20,
     };
 
     enum Proximity_Status {
