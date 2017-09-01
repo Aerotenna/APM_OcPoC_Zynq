@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <net/if.h>
 
@@ -14,6 +15,11 @@
 #include <linux/can/raw.h>
 
 #include <AP_HAL/AP_HAL.h>
+
+//#define CAN_DEBUG
+#ifdef CAN_DEBUG
+#include <errno.h>
+#endif
 
 using namespace Linux;
 
@@ -67,6 +73,9 @@ int CANDriver::can_write(uint8_t * tx_data, uint8_t len, uint32_t tx_id, uint32_
     int nbytes = write(_s, &frame, sizeof(frame));
 
     if(nbytes != sizeof(frame)){
+#ifdef CAN_DEBUG
+        hal.console->printf("can_write failed!\n");
+#endif
         return 1;
     }
 
@@ -79,6 +88,11 @@ int CANDriver::can_read(uint8_t * rx_data, uint8_t len, uint32_t* rx_id)
     struct can_frame frame;
 
     nbytes = read(_s, &frame, sizeof(struct can_frame));
+#ifdef CAN_DEBUG
+    if (nbytes == -1) {
+        hal.console->printf("can_read failed; errno: %s\n", strerror(errno));
+    }
+#endif
 
     frame.can_id &= 0x1fffffff;
 
