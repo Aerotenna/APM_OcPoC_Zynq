@@ -8,7 +8,7 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @Values: 0:None,1:StopAtFence,2:UseProximitySensor,3:All
     // @Bitmask: 0:StopAtFence,1:UseProximitySensor
     // @User: Standard
-    AP_GROUPINFO("ENABLE", 1,  AC_Avoid, _enabled, AC_AVOID_ALL),
+    AP_GROUPINFO("ENABLE", 1,  AC_Avoid, _enabled, AC_AVOID_USE_PROXIMITY_SENSOR),
 
     // @Param: ANGLE_MAX
     // @DisplayName: Avoidance max lean angle in non-GPS flight modes
@@ -31,7 +31,7 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @Units: meters
     // @Range: 1 10
     // @User: Standard
-    AP_GROUPINFO("MARGIN", 4, AC_Avoid, _margin, 2.0f),
+    AP_GROUPINFO("MARGIN", 4, AC_Avoid, _margin, 4.0f),
 
     AP_GROUPEND
 };
