@@ -18,7 +18,7 @@
 
 using namespace Linux;
 
-#define PWM_CHAN_COUNT 8
+#define PWM_CHAN_COUNT 12
 #define RCOUT_ZYNQ_PWM_BASE	 0x43c00000
 #define PWM_CMD_CONFIG	         0	/* full configuration in one go */
 #define PWM_CMD_ENABLE	         1	/* enable a pwm */
