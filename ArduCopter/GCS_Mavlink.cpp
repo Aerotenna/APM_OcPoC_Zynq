@@ -214,10 +214,17 @@ void NOINLINE Copter::send_rangefinder(mavlink_channel_t chan)
     if (!rangefinder.has_data_orient(ROTATION_PITCH_270)) {
         return;
     }
+    
+    AP_Proximity::Proximity_Distance_Array dist_array;
+    float uSharp_Patch_dist = 0.0f;
+    if (g2.proximity.get_horizontal_distances(dist_array)) {
+        uSharp_Patch_dist = (float)dist_array.distance[0]; //distance in meters
+    }
+    
     mavlink_msg_rangefinder_send(
             chan,
             rangefinder.distance_cm_orient(ROTATION_PITCH_270) * 0.01f,
-            rangefinder.voltage_mv_orient(ROTATION_PITCH_270) * 0.001f);
+            uSharp_Patch_dist);
 }
 #endif
 
