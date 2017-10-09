@@ -482,7 +482,7 @@ const AP_Param::GroupInfo NavEKF2::var_info[] = {
     // @Increment: 1
     // @User: Advanced
     // @Units: %
-    AP_GROUPINFO("RNG_USE_HGT", 42, NavEKF2, _useRngSwHgt, -1),
+    AP_GROUPINFO("RNG_USE_HGT", 42, NavEKF2, _useRngSwHgt, 70),
 
     // @Param: TERR_GRAD
     // @DisplayName: Maximum terrain gradient
