@@ -45,7 +45,8 @@ public:
         BattMonitor_TYPE_ANALOG_VOLTAGE_AND_CURRENT = 4,
         BattMonitor_TYPE_SOLO                       = 5,
         BattMonitor_TYPE_BEBOP                      = 6,
-        BattMonitor_TYPE_MAXELL                     = 7
+        BattMonitor_TYPE_MAXELL                     = 7,
+        BattMonitor_TYPE_OCPOC                      = 8
     };
 
     struct cells {
