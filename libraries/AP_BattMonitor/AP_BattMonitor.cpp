@@ -3,6 +3,7 @@
 #include "AP_BattMonitor_SMBus.h"
 #include "AP_BattMonitor_Bebop.h"
 #include "AP_BattMonitor_OcPoC.h"
+#include "AP_BattMonitor_ADS1115.h"
 #include <AP_Vehicle/AP_Vehicle_Type.h>
 
 extern const AP_HAL::HAL& hal;
@@ -219,6 +220,11 @@ AP_BattMonitor::init()
             	_num_instances++;
 #endif
             	break;
+            case BattMonitor_TYPE_ADS1115:
+            	state[instance].instance = instance;
+            	drivers[instance] = new AP_BattMonitor_ADS1115(*this, state[instance]);
+            	_num_instances++;
+
         }
 
         // call init function for each backend
@@ -256,7 +262,8 @@ bool AP_BattMonitor::has_current(uint8_t instance) const
         return (_monitoring[instance] == BattMonitor_TYPE_ANALOG_VOLTAGE_AND_CURRENT ||
                 _monitoring[instance] == BattMonitor_TYPE_SOLO ||
                 _monitoring[instance] == BattMonitor_TYPE_BEBOP ||
-                _monitoring[instance] == BattMonitor_TYPE_MAXELL);
+                _monitoring[instance] == BattMonitor_TYPE_MAXELL ||
+                _monitoring[instance] == BattMonitor_TYPE_ADS1115);
     }
 
     // not monitoring current

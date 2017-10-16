@@ -19,8 +19,14 @@ void AP_BattMonitor_OcPoC::read(void)
 
 	_xadc_fd = fopen("/sys/bus/iio/devices/iio:device0/in_voltage8_raw", "r");
 	if (_xadc_fd != NULL) {
-		fscanf(_xadc_fd, "%d", buff);
+		int ret = fscanf(_xadc_fd, "%d", buff);
 		fclose(_xadc_fd);
+
+		if (ret < 0) {
+			_state.healthy = false;
+			return;
+		}
+
 		vbat = buff[0] * _xadc_coef + 0.2;
 		_state.voltage = vbat;
 		_state.last_time_micros = AP_HAL::micros();
