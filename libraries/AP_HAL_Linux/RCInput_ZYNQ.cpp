@@ -17,7 +17,7 @@
 #include "GPIO.h"
 
 #if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
-#define RCIN_ZYNQ_PULSE_INPUT_BASE  0x43c70000
+#define RCIN_ZYNQ_PULSE_INPUT_BASE  0x43ca0000
 #else
 #define RCIN_ZYNQ_PULSE_INPUT_BASE  0x43c10000
 #endif
@@ -32,10 +32,10 @@ void RCInput_ZYNQ::init()
     if (mem_fd == -1) {
         AP_HAL::panic("Unable to open /dev/mem");
     }
-    pulse_input = (volatile uint32_t*) mmap(0, 0x1000, PROT_READ|PROT_WRITE,
+
+    pulse_input = (volatile uint32_t*) mmap(NULL, 0x1000, PROT_READ|PROT_WRITE,
                                                       MAP_SHARED, mem_fd, RCIN_ZYNQ_PULSE_INPUT_BASE);
     close(mem_fd);
-
     _s0_time = 0;
 }
 
@@ -45,13 +45,18 @@ void RCInput_ZYNQ::init()
 void RCInput_ZYNQ::_timer_tick()
 {
     uint32_t v;
-
+    
     // all F's means no samples available
     while((v = *pulse_input) != 0xffffffff) {
-        // Hi bit indicates pin state, low bits denote pulse length
-        if(!(v & 0x80000000))
-            _s0_time = (v & 0x7fffffff)/TICK_PER_US;
-        else
-            _process_rc_pulse(_s0_time, (v & 0x7fffffff)/TICK_PER_US);
+    
+        auto temp = (v & 0x7fffffff)/TICK_PER_US;
+        // Hi bit indicates low pin state
+        // Lower 31 bits denote pulse length
+        if (v & 0x80000000) {
+            _s0_time = temp;
+        } else {
+            _process_rc_pulse(_s0_time, temp);
+        }
+
     }
 }
