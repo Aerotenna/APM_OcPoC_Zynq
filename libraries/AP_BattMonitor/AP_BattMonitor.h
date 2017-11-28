@@ -24,6 +24,7 @@ class AP_BattMonitor_Analog;
 class AP_BattMonitor_SMBus;
 class AP_BattMonitor_SMBus_Solo;
 class AP_BattMonitor_SMBus_Maxell;
+class AP_BattMonitor_ADS1115;
 
 class AP_BattMonitor
 {
@@ -32,6 +33,7 @@ class AP_BattMonitor
     friend class AP_BattMonitor_SMBus;
     friend class AP_BattMonitor_SMBus_Solo;
     friend class AP_BattMonitor_SMBus_Maxell;
+    friend class AP_BattMonitor_ADS1115;
 
 public:
 
@@ -45,7 +47,8 @@ public:
         BattMonitor_TYPE_ANALOG_VOLTAGE_AND_CURRENT = 4,
         BattMonitor_TYPE_SOLO                       = 5,
         BattMonitor_TYPE_BEBOP                      = 6,
-        BattMonitor_TYPE_MAXELL                     = 7
+        BattMonitor_TYPE_MAXELL                     = 7,
+        BattMonitor_TYPE_ADS1115                    = 9
     };
 
     struct cells {
