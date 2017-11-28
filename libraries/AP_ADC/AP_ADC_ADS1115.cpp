@@ -9,7 +9,6 @@
 #define ADS1115_ADDRESS_ADDR_SCL    0x4B // address pin tied to SCL pin
 
 #define ADS1115_I2C_ADDR            ADS1115_ADDRESS_ADDR_GND
-#define ADS1115_I2C_BUS             1
 
 #define ADS1115_RA_CONVERSION       0x00
 #define ADS1115_RA_CONFIG           0x01
@@ -76,10 +75,10 @@
 #define ADS1115_COMP_LAT_LATCHING       0x01 << ADS1115_COMP_LAT_SHIFT
 
 #define ADS1115_COMP_QUE_SHIFT      0
-#define ADS1115_COMP_QUE_ASSERT1    0x00 << ADS1115_COMP_SHIFT
-#define ADS1115_COMP_QUE_ASSERT2    0x01 << ADS1115_COMP_SHIFT
-#define ADS1115_COMP_QUE_ASSERT4    0x02 << ADS1115_COMP_SHIFT
-#define ADS1115_COMP_QUE_DISABLE    0x03 // default
+#define ADS1115_COMP_QUE_ASSERT1    0x00 << ADS1115_COMP_QUE_SHIFT
+#define ADS1115_COMP_QUE_ASSERT2    0x01 << ADS1115_COMP_QUE_SHIFT
+#define ADS1115_COMP_QUE_ASSERT4    0x02 << ADS1115_COMP_QUE_SHIFT
+#define ADS1115_COMP_QUE_DISABLE    0x03 << ADS1115_COMP_QUE_SHIFT // default
 
 #define ADS1115_DEBUG 0
 #if ADS1115_DEBUG
@@ -123,7 +122,12 @@ AP_ADC_ADS1115::~AP_ADC_ADS1115()
 
 bool AP_ADC_ADS1115::init()
 {
-    _dev = hal.i2c_mgr->get_device(ADS1115_I2C_BUS, ADS1115_I2C_ADDR);
+    return AP_ADC_ADS1115::init(ADS1115_I2C_BUS);
+}
+
+bool AP_ADC_ADS1115::init(uint8_t bus)
+{
+    _dev = hal.i2c_mgr->get_device(bus, ADS1115_I2C_ADDR);
     if (!_dev) {
         return false;
     }

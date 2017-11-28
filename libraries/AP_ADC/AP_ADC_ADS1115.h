@@ -6,6 +6,10 @@
 
 #include "AP_ADC.h"
 
+#ifndef ADS1115_I2C_BUS
+  #define ADS1115_I2C_BUS 0
+#endif
+
 struct adc_report_s
 {
     uint8_t id;
@@ -19,6 +23,7 @@ public:
     ~AP_ADC_ADS1115();
 
     bool init();
+    bool init(uint8_t bus);
     size_t read(adc_report_s *report, size_t length) const;
 
     uint8_t get_channels_number() const
