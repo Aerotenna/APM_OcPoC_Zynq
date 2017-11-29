@@ -67,8 +67,8 @@
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_OCPOC_ZYNQ
  # define AP_BATT_VOLT_PIN                  -1
  # define AP_BATT_CURR_PIN                  -1
- # define AP_BATT_VOLTDIVIDER_DEFAULT       10.04975f
- # define AP_BATT_CURR_AMP_PERVOLT_DEFAULT  33.05487f
+ # define AP_BATT_VOLTDIVIDER_DEFAULT       10.04516f
+ # define AP_BATT_CURR_AMP_PERVOLT_DEFAULT  31.95862f
 
 #else
  # define AP_BATT_VOLT_PIN                  -1
