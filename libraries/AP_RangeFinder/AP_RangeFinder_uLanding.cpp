@@ -53,6 +53,15 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
         return false;
     }
 
+/***************************************************************************************
+*
+*  This is following the 'sampled Gaussian kernal' at
+*  https://en.wikipedia.org/wiki/Scale_space_implementation#The_discrete_Gaussian_kernel
+*  using an implementation similar to the python
+*  gaussian_filter1d() method
+*
+***************************************************************************************/
+
     // variables for the filter, these are the tuning paramters to set in
     // the GCS.
     // standard deviation of the gaussian
@@ -62,11 +71,12 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
 
     //these are local variables for the filter
     //this is half the window length
-    float wl = int(truncate * sigma + 0.5);
+    int wl = int(truncate * sigma + 0.5);
     //weights[] is the kernel matrix, or array in this case
-    float weights = new float[2 * wl + 1];
+    int kernel_length = 2 * wl + 1;
+    float *weights = new float[kernel_length];
     weights[wl] = 1.0; //value will vary based on filter function shape
-    float sum = weights[wl];
+    float kernelsum = weights[wl];
     float t = sigma * sigma;
 
     //make the kernel
@@ -74,12 +84,17 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
         int temp = exp(-0.5 * i * i / t);
 	weights[wl+i] = temp;
 	weights[wl-i] = temp;
-	sum += 2.0 * temp;
+	kernelsum += 2.0 * temp;
     }
     //normalize the kernel
     for (int j = 0; j < 2 * wl + 1; j++){
-	weights[j] /= sum;
+	weights[j] /= kernelsum;
     }
+
+    //array to store data for filtering
+    uint8_t *input_data = new uint8_t[2*wl+40];
+    uint8_t output_data[40];
+    //int input_count = 0;//maybe not necessary, just use the count from below
 
     // read any available lines from the uLanding
     float sum = 0;
@@ -110,7 +125,15 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
             // we have received six bytes data 
             // checksum
                 if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
-                    sum += linebuf[3]*256 + linebuf[2];
+                    //do the sum later now, after filtering
+                    //sum += linebuf[3]*256 + linebuf[2];
+                    if(count == 0 || count == 39){//pads the front and back so that we can still use all the data
+                        for(int i=0;i<wl;i++){
+                           input_data[i+count]=linebuf[3]*256 + linebuf[2];
+                        }
+                    } else {
+                        input_data[count+wl] = linebuf[3]*256 + linebuf[2];
+                    }
                     count ++;
                 }
                 index = 0;
@@ -125,6 +148,18 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
             }
 #endif
         }
+    }
+/*
+    for(int i=0;i<15;i++){
+        hal.console->printf("%i",input_data[i]);
+    }
+*/
+    //apply the kernal
+    for(int j=0;j<40;j++){
+        for(int k=0;k<kernel_length;k++){
+            output_data[j] += weights[k]*input_data[j-wl+k];
+        }
+        sum+=output_data[j];
     }
 
     if (count == 0) {
