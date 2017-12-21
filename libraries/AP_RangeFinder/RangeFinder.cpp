@@ -159,6 +159,18 @@ const AP_Param::GroupInfo RangeFinder::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("_ORIENT", 53, RangeFinder, _orientation[0], ROTATION_PITCH_270),
 
+    // @Param: _SIGMA
+    // @DisplayName: Filter Sigma
+    // @Description: Standard Deviation of uLanding's Gaussian Filter
+    // @User: Advanced
+    AP_GROUPINFO("_ORIENT", 57, RangeFinder, _ulanding_sigma, 2.0f),
+
+    // @Param: _TRUNC
+    // @DisplayName: Filter Window
+    // @Description: Number of standard deviations in a single window for uLanding's Gaussian Filter
+    // @User: Advanced
+    AP_GROUPINFO("_ORIENT", 58, RangeFinder, _ulanding_truncate, 2.0f),
+
 #if RANGEFINDER_MAX_INSTANCES > 1
     // @Param: 2_TYPE
     // @DisplayName: Second Rangefinder type
@@ -584,10 +596,26 @@ void RangeFinder::update(void)
                 state[i].range_valid_count = 0;
                 continue;
             }
+            if (_type[i] == RangeFinder_TYPE_ULANDING) {
+                // pass uLanding filter parameters to uLanding driver
+                drivers[i]->set_ulanding_params(_ulanding_sigma, _ulanding_truncate);
+            }
             drivers[i]->update();
             update_pre_arm_check(i);
         }
     }
+}
+
+uint16_t RangeFinder::get_raw_data(void)
+{
+    uint16_t raw_data = 0;
+
+    if ((drivers[0] != nullptr) && (_type[0] == RangeFinder_TYPE_ULANDING)) {
+        // only return raw data from a uLanding
+        raw_data = drivers[0]->get_raw_uLanding();
+    }
+
+    return raw_data;
 }
 
 bool RangeFinder::_add_backend(AP_RangeFinder_Backend *backend)

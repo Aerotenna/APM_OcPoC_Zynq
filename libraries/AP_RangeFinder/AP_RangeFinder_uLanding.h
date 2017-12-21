@@ -20,6 +20,12 @@ public:
     // update state
     void update(void);
 
+    // pass raw uLanding data
+    uint16_t get_raw_uLanding(void) { return _raw_uLanding; }
+
+    // update uLanding filter parameters
+    void set_ulanding_params(float sigma, float truncate);
+
 private:
     // get a reading
     bool get_reading(uint16_t &reading_cm);
@@ -28,4 +34,8 @@ private:
     uint32_t last_reading_ms = 0;
     uint8_t linebuf[10];
     uint8_t linebuf_len = 0;
+    uint16_t _raw_uLanding;
+
+    float _filter_sigma;
+    float _filter_truncate;
 };

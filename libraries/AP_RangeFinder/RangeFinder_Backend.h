@@ -38,6 +38,12 @@ public:
 
     virtual void handle_msg(mavlink_message_t *msg) { return; }
 
+    // pass raw uLanding data
+    virtual uint16_t get_raw_uLanding(void) { return 0; }
+
+    // update ulanding filter parameters
+    virtual void set_ulanding_params(float sigma, float truncate) { return; }
+
 protected:
 
     // update status based on distance measurement

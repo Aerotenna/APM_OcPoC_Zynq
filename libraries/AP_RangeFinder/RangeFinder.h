@@ -99,6 +99,10 @@ public:
     AP_Vector3f _pos_offset[RANGEFINDER_MAX_INSTANCES]; // position offset in body frame
     AP_Int8  _orientation[RANGEFINDER_MAX_INSTANCES];
 
+    // parameters for uLanding filter
+    AP_Float _ulanding_sigma;
+    AP_Float _ulanding_truncate;
+
     static const struct AP_Param::GroupInfo var_info[];
     
     // Return the number of range finder instances
@@ -112,6 +116,9 @@ public:
     // update state of all rangefinders. Should be called at around
     // 10Hz from main loop
     void update(void);
+
+    // pass raw uLanding data
+    uint16_t get_raw_data(void);
 
     // Handle an incoming DISTANCE_SENSOR message (from a MAVLink enabled range finder)
     void handle_msg(mavlink_message_t *msg);
