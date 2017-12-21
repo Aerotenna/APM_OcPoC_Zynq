@@ -53,6 +53,34 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
         return false;
     }
 
+    // variables for the filter, these are the tuning paramters to set in
+    // the GCS.
+    // standard deviation of the gaussian
+    float sigma = 2; 
+    //# of standard deviations to use in a single window
+    float truncate = 2;
+
+    //these are local variables for the filter
+    //this is half the window length
+    float wl = int(truncate * sigma + 0.5);
+    //weights[] is the kernel matrix, or array in this case
+    float weights = new float[2 * wl + 1];
+    weights[wl] = 1.0; //value will vary based on filter function shape
+    float sum = weights[wl];
+    float t = sigma * sigma;
+
+    //make the kernel
+    for (int i = 0; i < wl + 1; i++){
+        int temp = exp(-0.5 * i * i / t);
+	weights[wl+i] = temp;
+	weights[wl-i] = temp;
+	sum += 2.0 * temp;
+    }
+    //normalize the kernel
+    for (int j = 0; j < 2 * wl + 1; j++){
+	weights[j] /= sum;
+    }
+
     // read any available lines from the uLanding
     float sum = 0;
     uint16_t count = 0;
