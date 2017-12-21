@@ -217,7 +217,8 @@ void NOINLINE Copter::send_rangefinder(mavlink_channel_t chan)
     mavlink_msg_rangefinder_send(
             chan,
             rangefinder.distance_cm_orient(ROTATION_PITCH_270) * 0.01f,
-            rangefinder.voltage_mv_orient(ROTATION_PITCH_270) * 0.001f);
+            rangefinder.get_raw_data() * 0.01f);
+            //rangefinder.voltage_mv_orient(ROTATION_PITCH_270) * 0.001f);
 }
 #endif
 
