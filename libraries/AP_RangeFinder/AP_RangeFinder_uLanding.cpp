@@ -89,22 +89,23 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
 
 
     //make the kernel
-    for (int i = 0; i < wl + 1; i++){
-        int temp = exp(-0.5 * i * i / t);
+    for (int i = 1; i < wl + 1; i++) {
+        float temp = exp(-0.5 * i * i / t);
         weights[wl+i] = temp;
         weights[wl-i] = temp;
+
         kernelsum += 2.0 * temp;
     }
 
     //normalize the kernel
-    for (int j = 0; j < kernel_length; j++){
+    for (int j = 0; j < kernel_length; j++) {
         weights[j] /= kernelsum;
     }
 
     //array to store data for filtering
     //uint8_t *input_data = new uint8_t[2*wl+40];
-    uint8_t input_data[2*wl+40];
-    uint8_t output_data[40];
+    float input_data[2*wl+40];
+    float output_data[40];
 
     // read any available lines from the uLanding
     float sum = 0;
@@ -139,13 +140,17 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
                     //do the sum later now, after filtering
                     //sum += linebuf[3]*256 + linebuf[2];
                     if (count < 40) {
-                        if (count == 0 || count == 39){//pads the front and back so that we can still use all the data
+                        if (count == 0) { //pads the front and back so that we can still use all the data
                             for (int i=0; i<wl; i++) {
                                input_data[i+count] = linebuf[3]*256 + linebuf[2];
                             }
-                        } else {
-                            input_data[count+wl] = linebuf[3]*256 + linebuf[2];
+                        } else if (count == 39) {
+                            for (uint8_t i=0; i<wl; i++) {
+                                input_data[i+count+wl] = linebuf[3]*256 + linebuf[2];
+                            }
                         }
+
+                        input_data[count+wl] = linebuf[3]*256 + linebuf[2];
                     }
                     // collect raw data for plotting
                     raw_sum += linebuf[3]*256 + linebuf[2];
@@ -170,9 +175,9 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
     }
 */
     //apply the kernal
-    for(int j=0;j<40;j++){
-        for(int k=0;k<kernel_length;k++){
-            output_data[j] += weights[k] * input_data[j-wl+k];
+    for (int j=0; j<40; j++) {
+        for (int k=0; k<kernel_length; k++) {
+            output_data[j] += weights[k] * input_data[j+k];
         }
         sum+=output_data[j];
     }
@@ -184,7 +189,13 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm)
 #if ULANDING_VERSION == 1
     reading_cm = sum / count;
     _raw_uLanding  = raw_sum / count;
-    hal.console->printf("raw: %0.2f\tfilt: %0.2f\n", (float)(_raw_uLanding * 0.01f), (float)(reading_cm * 0.01f));
+
+#if ULAND_FILT_DEBUG
+    if (debug_print_count++ > 1) {
+        hal.console->printf("raw: %0.2f  filt: %0.2f  count: %d\n", (float)(_raw_uLanding * 0.01f), (float)(reading_cm * 0.01f), count);
+        debug_print_count = 0;
+    }
+#endif
 #else
     reading_cm = 2.5f * sum / count;
 #endif

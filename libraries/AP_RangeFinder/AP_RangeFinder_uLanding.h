@@ -6,6 +6,8 @@
 
 #define ULANDING_VERSION 1
 
+#define ULAND_FILT_DEBUG 0
+
 class AP_RangeFinder_uLanding : public AP_RangeFinder_Backend
 {
 
@@ -38,4 +40,7 @@ private:
 
     float _filter_sigma;
     float _filter_truncate;
+#if ULAND_FILT_DEBUG
+    int debug_print_count = 0;
+#endif
 };
