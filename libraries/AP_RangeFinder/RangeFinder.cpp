@@ -163,13 +163,13 @@ const AP_Param::GroupInfo RangeFinder::var_info[] = {
     // @DisplayName: Filter Sigma
     // @Description: Standard Deviation of uLanding's Gaussian Filter
     // @User: Advanced
-    AP_GROUPINFO("_ORIENT", 57, RangeFinder, _ulanding_sigma, 2.0f),
+    AP_GROUPINFO("_SIGMA", 57, RangeFinder, _ulanding_sigma, 2.0f),
 
     // @Param: _TRUNC
     // @DisplayName: Filter Window
     // @Description: Number of standard deviations in a single window for uLanding's Gaussian Filter
     // @User: Advanced
-    AP_GROUPINFO("_ORIENT", 58, RangeFinder, _ulanding_truncate, 2.0f),
+    AP_GROUPINFO("_TRUNC", 58, RangeFinder, _ulanding_truncate, 2.0f),
 
 #if RANGEFINDER_MAX_INSTANCES > 1
     // @Param: 2_TYPE
