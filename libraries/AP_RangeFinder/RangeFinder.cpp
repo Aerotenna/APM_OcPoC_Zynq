@@ -159,17 +159,11 @@ const AP_Param::GroupInfo RangeFinder::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("_ORIENT", 53, RangeFinder, _orientation[0], ROTATION_PITCH_270),
 
-    // @Param: _SIGMA
+    // @Param: _FILBUF
     // @DisplayName: Filter Sigma
     // @Description: Standard Deviation of uLanding's Gaussian Filter
     // @User: Advanced
-    AP_GROUPINFO("_SIGMA", 57, RangeFinder, _ulanding_sigma, 2.0f),
-
-    // @Param: _TRUNC
-    // @DisplayName: Filter Window
-    // @Description: Number of standard deviations in a single window for uLanding's Gaussian Filter
-    // @User: Advanced
-    AP_GROUPINFO("_TRUNC", 58, RangeFinder, _ulanding_truncate, 2.0f),
+    AP_GROUPINFO("_FILBUF", 57, RangeFinder, _ulanding_filt_len, 10),
 
 #if RANGEFINDER_MAX_INSTANCES > 1
     // @Param: 2_TYPE
@@ -598,7 +592,7 @@ void RangeFinder::update(void)
             }
             if (_type[i] == RangeFinder_TYPE_ULANDING) {
                 // pass uLanding filter parameters to uLanding driver
-                drivers[i]->set_ulanding_params(_ulanding_sigma, _ulanding_truncate);
+                drivers[i]->set_ulanding_params(_ulanding_filt_len);
             }
             drivers[i]->update();
             update_pre_arm_check(i);

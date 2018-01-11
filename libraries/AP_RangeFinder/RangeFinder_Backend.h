@@ -42,7 +42,7 @@ public:
     virtual uint16_t get_raw_uLanding(void) { return 0; }
 
     // update ulanding filter parameters
-    virtual void set_ulanding_params(float sigma, float truncate) { return; }
+    virtual void set_ulanding_params(int filter_length) { return; }
 
 protected:
 

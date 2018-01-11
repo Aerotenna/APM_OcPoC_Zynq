@@ -100,8 +100,7 @@ public:
     AP_Int8  _orientation[RANGEFINDER_MAX_INSTANCES];
 
     // parameters for uLanding filter
-    AP_Float _ulanding_sigma;
-    AP_Float _ulanding_truncate;
+    AP_Int8  _ulanding_filt_len;
 
     static const struct AP_Param::GroupInfo var_info[];
     

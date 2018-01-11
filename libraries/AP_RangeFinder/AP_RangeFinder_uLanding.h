@@ -8,6 +8,9 @@
 
 #define ULAND_FILT_DEBUG 0
 
+#define DEFAULT_FILT_BUFFER 10
+#define MAX_FILT_BUFFER 40
+
 class AP_RangeFinder_uLanding : public AP_RangeFinder_Backend
 {
 
@@ -26,11 +29,11 @@ public:
     uint16_t get_raw_uLanding(void) { return _raw_uLanding; }
 
     // update uLanding filter parameters
-    void set_ulanding_params(float sigma, float truncate);
+    void set_ulanding_params(int filter_length);
 
 private:
     // get a reading
-    bool get_reading(uint16_t &reading_cm);
+    bool get_reading(uint16_t &reading_cm, uint16_t &voltage_mv);
 
     AP_HAL::UARTDriver *uart = nullptr;
     uint32_t last_reading_ms = 0;
@@ -38,8 +41,10 @@ private:
     uint8_t linebuf_len = 0;
     uint16_t _raw_uLanding;
 
-    float _filter_sigma;
-    float _filter_truncate;
+    uint8_t _max_sum_count;
+    uint8_t _max_sum_count_prev;
+    float   _running_avg[MAX_FILT_BUFFER];
+    uint8_t _running_count = 0;
 #if ULAND_FILT_DEBUG
     int debug_print_count = 0;
 #endif
