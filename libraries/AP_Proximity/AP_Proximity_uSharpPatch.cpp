@@ -381,5 +381,17 @@ bool AP_Proximity_uSharpPatch::get_usharp_can_data(Custom_Can_Frame* frame)
         }
     }
 
+#if RADAR_DISTANCE_DEBUG
+    hal.console->printf("\nCAN Radar Read: %s %s %s %s %s %s %s %s recv_flag: %d\n",
+                        ((recv_flag & 0x0001) ? "F"  : ""),
+                        ((recv_flag & 0x0004) ? "RF" : ""),
+                        ((recv_flag & 0x0010) ? "R"  : ""),
+                        ((recv_flag & 0x0040) ? "RB" : ""),
+                        ((recv_flag & 0x0100) ? "B"  : ""),
+                        ((recv_flag & 0x0400) ? "LB" : ""),
+                        ((recv_flag & 0x1000) ? "L"  : ""),
+                        ((recv_flag & 0x4000) ? "LF" : ""));
+#endif
+
     return recv_flag != 0;
 }
