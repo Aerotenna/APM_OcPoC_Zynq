@@ -65,6 +65,55 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm, uint16_t &voltag
         return false;
     }
 
+/***************************************************************************************
+*
+*  This is following the 'sampled Gaussian kernal' at
+*  https://en.wikipedia.org/wiki/Scale_space_implementation#The_discrete_Gaussian_kernel
+*  using an implementation similar to the python
+*  gaussian_filter1d() method
+*
+***************************************************************************************/
+    // variables for the filter, these are the tuning paramters to set in
+    // the GCS.
+    // standard deviation of the gaussian
+    float sigma = _filter_sigma; 
+    //# of standard deviations to use in a single window
+    float truncate = _filter_truncate;
+
+    //these are local variables for the filter
+    //this is half the window length
+    int wl = int(truncate * sigma + 0.5);
+    //weights[] is the kernel matrix, or array in this case
+    int kernel_length = 2 * wl + 1;
+    //float *weights = new float[kernel_length];
+    float weights[kernel_length];
+    weights[wl] = 1.0; //value will vary based on filter function shape
+    float kernelsum = weights[wl];
+    float t = sigma * sigma;
+
+
+    //make the kernel
+    for (int i = 0; i < wl + 1; i++){
+        float temp = exp(-0.5 * i * i / t);
+        weights[wl+i] = temp;
+        weights[wl-i] = temp;
+        kernelsum += 2.0 * temp;
+	//TODO: this sum is wrong, needs to add once for i=0
+	//hal.console->printf(
+    }
+
+    //normalize the kernel
+    for ( int j = 0; j < kernel_length; j++ ) {
+        weights[j] /= kernelsum;
+	//hal.console->printf(" %i -- %2.5f", j, weights[j]);
+    }
+    //hal.console->printf("\n");
+
+    //array to store data for filtering
+    //uint8_t *input_data = new uint8_t[2*wl+40];
+    float input_data[2*wl+40];
+    float output_data[40];
+
     // read any available lines from the uLanding
     float sum = 0;
     uint16_t count = 0;
@@ -96,6 +145,20 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm, uint16_t &voltag
                 if (((linebuf[1] + linebuf[2] + linebuf[3] + linebuf[4]) & 0xFF) == linebuf[5]) {
                     //do the sum later now, after filtering
                     sum += linebuf[3]*256 + linebuf[2];
+/*                    //sum += linebuf[3]*256 + linebuf[2];
+                    if (count < 40) {
+                        if (count == 0) { // || count == 39){//pads the front and back so that we can still use all the data
+                            for (int i=0; i<wl; i++) {
+                               input_data[i+count] = linebuf[3]*256 + linebuf[2];
+                            }
+                        } else if (count == 39)
+                        
+                            input_data[count+wl] = linebuf[3]*256 + linebuf[2];
+                        
+                    }
+                    // collect raw data for plotting
+                    raw_sum += linebuf[3]*256 + linebuf[2];
+*/
                     count ++;
                 }
                 index = 0;
@@ -110,6 +173,23 @@ bool AP_RangeFinder_uLanding::get_reading(uint16_t &reading_cm, uint16_t &voltag
             }
 #endif
         }
+    }
+    for( int m = 0; m < 2*wl+1 ; m++) {
+        hal.console->printf("%i %2.5f", m, input_data[m]);
+    }
+/*
+    for(int i=0;i<15;i++){
+        hal.console->printf("%i",input_data[i]);
+    }
+*/
+    //apply the kernal
+    for(int j=0;j<40;j++){
+        for(int k=0;k<kernel_length;k++){
+            output_data[j] += weights[k] * input_data[j+k];
+	//hal.console->printf("%i %i %2.5f %2.5f %2.5f\n",j,k, output_data[j],weights[k],input_data[j+k]);
+        }
+	//hal.console->printf("summed output %i: %2.5f\n\n",j,output_data[j]);
+        sum+=output_data[j];
     }
 
     if (count == 0) {
